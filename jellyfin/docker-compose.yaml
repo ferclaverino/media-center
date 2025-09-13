@@ -1,0 +1,135 @@
+services:
+  qbittorrent:
+    container_name: qbittorrent
+    image: lscr.io/linuxserver/qbittorrent:latest
+    networks:
+      - mynetwork
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Bogota
+      - WEBUI_PORT=5080
+    volumes:
+      - ./qbittorrent-config:/config
+      - ${STORAGE}/1tb1/Bittorrent:/downloads
+      - ${STORAGE}/Movies/movies:/movies
+      - ${STORAGE}/Series/tvshows:/tvshows
+    ports:
+      - 5080:5080
+      - 6881:6881
+      - 6881:6881/udp
+    restart: "unless-stopped"
+
+  radarr:
+    container_name: radarr
+    image: lscr.io/linuxserver/radarr:latest
+    depends_on:
+      - qbittorrent
+    networks:
+      - mynetwork
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Bogota
+    volumes:
+      - ./radarr-config:/config
+      - ${STORAGE}/Movies/movies:/movies
+      - ${STORAGE}/1tb1/Bittorrent:/downloads
+    ports:
+      - 7878:7878
+    restart: "unless-stopped"
+
+  sonarr:
+    container_name: sonarr
+    image: lscr.io/linuxserver/sonarr:latest
+    depends_on:
+      - qbittorrent
+    networks:
+      - mynetwork
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Bogota
+    volumes:
+      - ./sonarr-config:/config
+      - ${STORAGE}/Series/tvshows:/tv
+      - ${STORAGE}/1tb1/Bittorrent:/downloads
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+
+  prowlarr:
+    container_name: prowlarr
+    image: lscr.io/linuxserver/prowlarr:latest
+    depends_on:
+      - qbittorrent
+      - radarr
+      - sonarr
+    networks:
+      - mynetwork
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Bogota
+    volumes:
+      - ./prowlarr-config:/config
+    ports:
+      - 9696:9696
+    restart: unless-stopped
+
+  jellyfin:
+    container_name: jellyfin
+    image: jellyfin/jellyfin:latest
+    networks:
+      - mynetwork
+    volumes:
+      - ./jellyfin-config:/config
+      - ./jellyfin-cache:/cache
+      - ${STORAGE}/Series/tvshows:/tv
+      - ${STORAGE}/Movies/movies:/movies
+    ports:
+      - 8096:8096
+    restart: unless-stopped
+
+  jellyseerr:
+    container_name: jellyseerr
+    image: fallenbagel/jellyseerr:latest
+    depends_on:
+      - jellyfin
+      - radarr
+      - sonarr
+    networks:
+      - mynetwork
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=America/Bogota
+      - PORT=5055
+    volumes:
+      - ./jellyseerr-config:/app/config
+    ports:
+      - 5055:5055
+    restart: unless-stopped
+
+  bazarr:
+    container_name: bazarr
+    image: lscr.io/linuxserver/bazarr:latest
+    depends_on:
+      - radarr
+      - sonarr
+    networks:
+      - mynetwork
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - ./bazarr-config:/config
+      - ${STORAGE}/Movies/movies:/movies
+      - ${STORAGE}/Series/tvshows:/tv #optional
+    ports:
+      - 6767:6767
+    restart: unless-stopped
+
+networks:
+  mynetwork:
+    external: false
