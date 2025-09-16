@@ -7,7 +7,7 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=America/Bogota
+      - TZ=America/Argentina/Buenos_Aires
       - WEBUI_PORT=5080
     volumes:
       - ./qbittorrent-config:/config
@@ -30,7 +30,7 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=America/Bogota
+      - TZ=America/Argentina/Buenos_Aires
     volumes:
       - ./radarr-config:/config
       - ${STORAGE}/Movies/movies:/movies
@@ -49,7 +49,7 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=America/Bogota
+      - TZ=America/Argentina/Buenos_Aires
     volumes:
       - ./sonarr-config:/config
       - ${STORAGE}/Series/tvshows:/tv
@@ -68,7 +68,7 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=Etc/UTC
+      - TZ=America/Argentina/Buenos_Aires
     volumes:
       - ./lidarr-config:/config
       - ${STORAGE}/Music/music:/music
@@ -84,12 +84,13 @@ services:
       - qbittorrent
       - radarr
       - sonarr
+      - lidarr
     networks:
       - mynetwork
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=America/Bogota
+      - TZ=America/Argentina/Buenos_Aires
     volumes:
       - ./prowlarr-config:/config
     ports:
@@ -106,6 +107,7 @@ services:
       - ./jellyfin-cache:/cache
       - ${STORAGE}/Series/tvshows:/tv
       - ${STORAGE}/Movies/movies:/movies
+      - ${STORAGE}/Music/music:/music
     ports:
       - 8096:8096
     restart: unless-stopped
@@ -121,7 +123,7 @@ services:
       - mynetwork
     environment:
       - LOG_LEVEL=debug
-      - TZ=America/Bogota
+      - TZ=America/Argentina/Buenos_Aires
       - PORT=5055
     volumes:
       - ./jellyseerr-config:/app/config
@@ -140,7 +142,7 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=Etc/UTC
+      - TZ=America/Argentina/Buenos_Aires
     volumes:
       - ./bazarr-config:/config
       - ${STORAGE}/Movies/movies:/movies
