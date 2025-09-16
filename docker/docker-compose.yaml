@@ -58,6 +58,25 @@ services:
       - 8989:8989
     restart: unless-stopped
 
+  lidarr:
+    container_name: lidarr
+    image: lscr.io/linuxserver/lidarr:latest
+    depends_on:
+      - qbittorrent
+    networks:
+      - mynetwork
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - ./lidarr-config:/config
+      - ${STORAGE}/Music/music:/music
+      - ${STORAGE}/1tb1/Bittorrent:/downloads
+    ports:
+      - 8686:8686
+    restart: unless-stopped
+
   prowlarr:
     container_name: prowlarr
     image: lscr.io/linuxserver/prowlarr:latest
