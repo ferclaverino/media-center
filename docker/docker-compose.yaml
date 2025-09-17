@@ -11,9 +11,9 @@ services:
       - WEBUI_PORT=5080
     volumes:
       - ./qbittorrent-config:/config
-      - ${STORAGE}/1tb1/Bittorrent:/downloads
-      - ${STORAGE}/Movies/movies:/movies
-      - ${STORAGE}/Series/tvshows:/tvshows
+      - ${STORAGE}/downloads:/downloads
+      - ${STORAGE}/movies:/movies
+      - ${STORAGE}/series:/tvshows
     ports:
       - 5080:5080
       - 6881:6881
@@ -33,8 +33,8 @@ services:
       - TZ=America/Argentina/Buenos_Aires
     volumes:
       - ./radarr-config:/config
-      - ${STORAGE}/Movies/movies:/movies
-      - ${STORAGE}/1tb1/Bittorrent:/downloads
+      - ${STORAGE}/movies:/movies
+      - ${STORAGE}/downloads:/downloads
     ports:
       - 7878:7878
     restart: "unless-stopped"
@@ -52,8 +52,8 @@ services:
       - TZ=America/Argentina/Buenos_Aires
     volumes:
       - ./sonarr-config:/config
-      - ${STORAGE}/Series/tvshows:/tv
-      - ${STORAGE}/1tb1/Bittorrent:/downloads
+      - ${STORAGE}/series:/tv
+      - ${STORAGE}/downloads:/downloads
     ports:
       - 8989:8989
     restart: unless-stopped
@@ -71,8 +71,8 @@ services:
       - TZ=America/Argentina/Buenos_Aires
     volumes:
       - ./lidarr-config:/config
-      - ${STORAGE}/Music/music:/music
-      - ${STORAGE}/1tb1/Bittorrent:/downloads
+      - ${STORAGE}/music:/music
+      - ${STORAGE}/downloads:/downloads
     ports:
       - 8686:8686
     restart: unless-stopped
@@ -105,9 +105,9 @@ services:
     volumes:
       - ./jellyfin-config:/config
       - ./jellyfin-cache:/cache
-      - ${STORAGE}/Series/tvshows:/tv
-      - ${STORAGE}/Movies/movies:/movies
-      - ${STORAGE}/Music/music:/music
+      - ${STORAGE}/series:/tv
+      - ${STORAGE}/movies:/movies
+      - ${STORAGE}/music:/music
     ports:
       - 8096:8096
     restart: unless-stopped
@@ -145,8 +145,8 @@ services:
       - TZ=America/Argentina/Buenos_Aires
     volumes:
       - ./bazarr-config:/config
-      - ${STORAGE}/Movies/movies:/movies
-      - ${STORAGE}/Series/tvshows:/tv #optional
+      - ${STORAGE}/movies:/movies
+      - ${STORAGE}/series:/tv #optional
     ports:
       - 6767:6767
     restart: unless-stopped
