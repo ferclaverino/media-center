@@ -108,6 +108,11 @@ services:
       - ${STORAGE}/series:/tv
       - ${STORAGE}/movies:/movies
       - ${STORAGE}/music:/music
+    devices:
+      - /dev/dri:/dev/dri
+    group_add:
+      - "44" # video
+      - "110" # render
     ports:
       - 8096:8096
     restart: unless-stopped
